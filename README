@@ -1,0 +1,5 @@
+This is thing to generate a list of new items in database.
+
+I need something to list new items available in our ExLibris Primo database, and so i've started to experiment with some things. This is written as a Java Servlet. The initial design relies on OAI-PMH harvesting from a backend system, not on digging Primo itself.
+
+All code written by Mace Ojala <mace@kirjakaapeli.lib.hel.fi>, and under GNU GPL. Love <3

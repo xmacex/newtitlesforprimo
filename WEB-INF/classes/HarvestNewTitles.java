@@ -15,6 +15,10 @@ import com.rdksys.oai.repository.Set;
 public class HarvestNewTitles extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 	throws IOException, ServletException {
+		// Let's digest some parameters
+		String paramvalue = request.getParameter("test");
+		String repositoryurl = getServletContext().getInitParameter("repository.url");
+
 		// We need a writer, let's summon one
 		PrintWriter out = response.getWriter();
 		out.println("<html>");
@@ -22,11 +26,12 @@ public class HarvestNewTitles extends HttpServlet {
 		out.println("<title>rips raps harava</title>");
 		out.println("</head>");
 		out.println("<body>");
+		out.println(paramvalue);
 		out.println("kahtotaas josko löytyisi mitään haravoitavaa");
 
 		try {
-			Harvester harvester = new Harvester("http://biblio.ugent.be/oai");
-
+//			Harvester harvester = new Harvester("http://biblio.ugent.be/oai");
+			Harvester harvester = new Harvester(repositoryurl);
 			// Identify
 			Identify identify = harvester.identify();
 			out.println(identify.getRepositoryName());

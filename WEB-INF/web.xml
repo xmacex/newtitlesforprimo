@@ -1,7 +1,23 @@
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-   xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml
-   version="2.5"> 
-	<servlet-name>HarvestNewTitles</servlet-name>
-	<servlet-class>HarvestNewTitles</servlet-class>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml">
+        <servlet>
+		<description>harav harav harav Gentistä</description>
+	        <display-name>harava</display-name>
+                <servlet-name>HarvestNewTitles</servlet-name>
+                <servlet-class>HarvestNewTitles</servlet-class>
+        </servlet>
+
+	<context-param>
+   		<description>This is the OAI-PMH repository to harvest from</description>
+		<param-name>repository.url</param-name>
+		<param-value>http://biblio.ugent.be/oai</param-value>
+	</context-param>
+
+        <servlet-mapping>
+                <servlet-name>HarvestNewTitles</servlet-name>
+                <url-pattern>/harava</url-pattern>
+        </servlet-mapping>
 </web-app>

@@ -3,6 +3,7 @@
 
 import java.io.*;
 import java.util.List;
+import java.util.Iterator;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
@@ -49,17 +50,28 @@ public class HarvestNewTitles extends HttpServlet {
    			}
 			out.println("</ul>");
 
-			// List titles in a set
+			// List titles in a set give in the URL as parameter "set"
 			String fromdate = "2011-06-01";
 			String untildate = "2011-06-30";
 			String set = paramvalue;
 
+			File tempDir = (File)getServletContext().getAttribute("javax.servlet.context.tmpdir");
+			File tempFile = File.createTempFile(getServletName(), ".tmp", tempDir);
+			FileWriter fw = new FileWriter(tempFile);
+			String filename = tempFile.getPath();
+			out.println(filename);
+
+			// These two lines create two different iterators... how do i create only one?
+			// The thing is that this Servlet isn't allowed to create files without
+			// guidance (see above), but i don't understand how do i pass the "filename" as
+			// an argument to the RecordIterator constructor, and do the harvesting too...
+			//RecordIterator records = new RecordIterator(filename);
 			RecordIterator records = harvester.listRecords(fromdate, untildate, set);
 			out.println("<ol>");
 			while(records.hasNext()) {
 				Record record = records.next();
 				out.println("<li>");
-				System.out.println(record.getMetadata().getTitleList().get(0));
+				out.println(record.getMetadata().getTitleList().get(0));
 				out.println("</li>");
 			}
 			out.println("</ol>");

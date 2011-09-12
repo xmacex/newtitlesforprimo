@@ -33,6 +33,7 @@ class HarvestNewTitles {
 		String fromdate = "2011-06-01";
 		String untildate = "2011-06-30";
 		String set = "";
+		String tempfile = "filukka";
 
 		RecordIterator records = harvester.listRecords(fromdate, untildate, set);
 		while(records.hasNext()) {

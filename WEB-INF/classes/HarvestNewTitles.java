@@ -4,16 +4,19 @@
 import java.io.*;
 import java.util.List;
 import java.util.Iterator;
+
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import org.apache.http.client.ClientProtocolException;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.Namespace;
+import org.jdom.input.DOMBuilder;
+import org.jdom.output.XMLOutputter;
 
-import com.rdksys.oai.Harvester;
-import com.rdksys.oai.repository.Identify;
-import com.rdksys.oai.repository.Set;
-import com.rdksys.oai.data.Record;
-import com.rdksys.oai.data.RecordIterator;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.xpath.XPathAPI;
+import ORG.oclc.oai.harvester2.verb.*;
 
 public class HarvestNewTitles extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -32,53 +35,20 @@ public class HarvestNewTitles extends HttpServlet {
 		out.println(paramvalue);
 		out.println("kahtotaas josko löytyisi mitään haravoitavaa");
 
+		String baseurl = "http://memory.loc.gov/cgi-bin/oai2_0";
+		Namespace OAI_NS = Namespace.getNamespace("http://www.openarchives.org/OAI/2.0/");
+		DOMBuilder db = new DOMBuilder();
+
 		try {
-			Harvester harvester = new Harvester(repositoryurl);
-			// Identify
-			Identify identify = harvester.identify();
-			out.println(identify.getRepositoryName());
-			out.println(identify.getProtocolVersion());
+			ListSets ls = new ListSets(baseurl);
+			Document reply = db.build(ls.getDocument());
+			Element root = reply.getRootElement();
+			List<Element> sets = root.getChild("ListSets",OAI_NS).getChildren("set",OAI_NS);
 
-			// List sets
-			out.println("<h2>settejä</h2>");
-			out.println("<ul>");
-			List<Set> sets = harvester.listSets();
-			for(Set set : sets) {
-				out.println("<li>");
-				out.println(set.getSetName());
-				out.println("</li>");
-   			}
-			out.println("</ul>");
-
-			// List titles in a set give in the URL as parameter "set"
-			String fromdate = "2011-06-01";
-			String untildate = "2011-06-30";
-			String set = paramvalue;
-
-			File tempDir = (File)getServletContext().getAttribute("javax.servlet.context.tmpdir");
-			File tempFile = File.createTempFile(getServletName(), ".tmp", tempDir);
-			FileWriter fw = new FileWriter(tempFile);
-			String filename = tempFile.getPath();
-			out.println(filename);
-
-			// These two lines create two different iterators... how do i create only one?
-			// The thing is that this Servlet isn't allowed to create files without
-			// guidance (see above), but i don't understand how do i pass the "filename" as
-			// an argument to the RecordIterator constructor, and do the harvesting too...
-			/// constructor creates the iterator
-			RecordIterator records = new RecordIterator(filename);
-			/// method to populate it with data
-			//records = harvester.listRecords(fromdate, untildate, set);
-			
-			out.println("<ol>");
-			while(records.hasNext()) {
-				Record record = records.next();
-				out.println("<li>");
-				out.println(record.getMetadata().getTitleList().get(0));
-				out.println("</li>");
+			for (Element set : sets) {
+				String setName = set.getChildText("setName",OAI_NS);
+					out.println(setName);
 			}
-			out.println("</ol>");
-
 	        } catch (Exception ex) {
 		            ex.printStackTrace ();
 		}

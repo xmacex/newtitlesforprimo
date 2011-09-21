@@ -65,8 +65,11 @@ public class HarvestNewTitles extends HttpServlet {
 			// The thing is that this Servlet isn't allowed to create files without
 			// guidance (see above), but i don't understand how do i pass the "filename" as
 			// an argument to the RecordIterator constructor, and do the harvesting too...
-			//RecordIterator records = new RecordIterator(filename);
-			RecordIterator records = harvester.listRecords(fromdate, untildate, set);
+			/// constructor creates the iterator
+			RecordIterator records = new RecordIterator(filename);
+			/// method to populate it with data
+			//records = harvester.listRecords(fromdate, untildate, set);
+			
 			out.println("<ol>");
 			while(records.hasNext()) {
 				Record record = records.next();
